@@ -1,39 +1,62 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-pastel: #DCEAF7;
-  --color-brand-soft: #B7D0E8;
-  --color-brand-deep: #203A5B;
-  --color-brand-gold: #C5A15A;
-  --color-brand-gold-light: #E5D2A6;
-  --color-brand-ivory: #FCFAF6;
-  --color-brand-text: #263447;
-  --color-brand-muted: #667386;
+  --color-mist: #dceaf7;
+  --color-mist-deep: #b7d0e8;
+  --color-navy: #203a5b;
+  --color-gold: #c5a15a;
+  --color-gold-light: #e5d2a6;
+  /* Darker gold for text on light backgrounds (the brand gold fails WCAG contrast as text). */
+  --color-gold-ink: #86671f;
+  --color-ivory: #fcfaf6;
+  --color-ink: #263447;
+  --color-muted: #5b6878;
+  /* WhatsApp action color, darkened so white text meets contrast requirements. */
+  --color-wa: #157a43;
+  --color-wa-dark: #0f6236;
+
+  --font-display: Georgia, "Times New Roman", Times, serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --animate-fade-in: fade-in 180ms ease-out both;
+  --animate-rise: rise 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
 }
 
-:root {
-  --background: #FCFAF6;
-  --foreground: #263447;
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 7rem;
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  overflow-x: hidden;
+  background: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  overflow-x: clip;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+:where(a, button, input, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-navy);
+  outline-offset: 3px;
+  border-radius: 6px;
 }
-::-webkit-scrollbar-track {
-  background: #FCFAF6;
-}
-::-webkit-scrollbar-thumb {
-  background: #B7D0E8;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #C5A15A;
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

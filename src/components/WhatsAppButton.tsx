@@ -1,23 +1,21 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+import { waLink } from "@/lib/site";
 
 export function WhatsAppButton() {
-  // Official shop contact: (512) 679-9240
-  const phoneNumber = "15126799240";
-  const message = encodeURIComponent(
-    "Hello King's Alterations! I would like to inquire about your tailoring and alteration services."
-  );
+  const { t } = useI18n();
 
   return (
     <a
-      href={`https://wa.me/${phoneNumber}?text=${message}`}
+      href={waLink(t.wa.general)}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-[#25D366] text-white rounded-full shadow-xl hover:bg-[#20bd5a] hover:scale-105 active:scale-95 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-[#25D366]/40"
-      aria-label="Direct WhatsApp Message to King's Alterations"
+      aria-label={t.wa.float}
+      className="fixed bottom-5 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-wa text-white shadow-lg transition-transform hover:scale-105 hover:bg-wa-dark active:scale-95"
     >
-      <MessageCircle className="w-7 h-7" />
+      <MessageCircle aria-hidden className="h-7 w-7" />
     </a>
   );
 }

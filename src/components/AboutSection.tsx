@@ -1,89 +1,59 @@
 "use client";
 
-import Image from "next/image";
-import { Heart, Users, Clock, MessageSquare } from "lucide-react";
+import { Check, MessageCircle } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { waLink } from "@/lib/site";
+import { CatalogImage } from "@/components/CatalogImage";
+
+const ABOUT_PHOTO_ID = "ka-022";
 
 export function AboutSection() {
   const { t } = useI18n();
 
   return (
-    <section id="about" className="py-20 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Story Column */}
-          <div className="lg:col-span-6 space-y-6">
-            <span className="text-xs font-bold uppercase tracking-widest text-[#C5A15A] block">
-              {t.about.badge}
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#203A5B] leading-tight">
-              {t.about.title}
-            </h2>
-            <p className="text-sm sm:text-base text-[#667386] leading-relaxed">
-              {t.about.p1}
-            </p>
-            <p className="text-sm sm:text-base text-[#667386] leading-relaxed">
-              {t.about.p2}
-            </p>
+    <section id="about" aria-labelledby="about-title" className="border-t border-mist bg-ivory py-16 md:py-24">
+      <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-gold-ink">{t.about.eyebrow}</p>
+          <h2 id="about-title" className="mt-3 font-display text-3xl font-bold leading-tight text-navy sm:text-4xl">
+            {t.about.title}
+          </h2>
+          <div aria-hidden className="mt-4 h-0.5 w-14 bg-gold" />
+          <p className="mt-5 text-base leading-relaxed text-muted">{t.about.p1}</p>
+          <p className="mt-4 text-base leading-relaxed text-muted">{t.about.p2}</p>
 
-            <div className="grid grid-cols-2 gap-4 pt-4">
-              <div className="p-4 rounded-2xl bg-[#FCFAF6] border border-[#DCEAF7]">
-                <div className="flex items-center gap-2 text-[#203A5B] font-semibold text-sm mb-1">
-                  <Users className="w-4 h-4 text-[#C5A15A]" />
-                  <span>{t.about.fittingsTitle}</span>
-                </div>
-                <p className="text-xs text-[#667386]">
-                  {t.about.fittingsDesc}
-                </p>
+          <dl className="mt-8 grid gap-5 sm:grid-cols-2">
+            {[
+              [t.about.walkIns, t.about.walkInsText],
+              [t.about.ready, t.about.readyText],
+            ].map(([title, text]) => (
+              <div key={title} className="border-l-2 border-gold pl-4">
+                <dt className="flex items-center gap-2 font-semibold text-navy">
+                  <Check aria-hidden className="h-4 w-4 text-gold-ink" />
+                  {title}
+                </dt>
+                <dd className="mt-1 text-sm text-muted">{text}</dd>
               </div>
+            ))}
+          </dl>
 
-              <div className="p-4 rounded-2xl bg-[#FCFAF6] border border-[#DCEAF7]">
-                <div className="flex items-center gap-2 text-[#203A5B] font-semibold text-sm mb-1">
-                  <Clock className="w-4 h-4 text-[#C5A15A]" />
-                  <span>{t.about.pickupTitle}</span>
-                </div>
-                <p className="text-xs text-[#667386]">
-                  {t.about.pickupDesc}
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <a
-                href={`https://wa.me/15126799240?text=${encodeURIComponent(t.whatsapp.generalMessage)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#25D366] text-white font-semibold text-sm hover:bg-[#20bd5a] transition-all shadow-md"
-              >
-                <MessageSquare className="w-4 h-4" />
-                {t.about.btnWhatsapp}
-              </a>
-            </div>
-          </div>
-
-          {/* Right Visual Composition */}
-          <div className="lg:col-span-6 relative">
-            <div className="relative rounded-3xl overflow-hidden aspect-[4/5] border border-[#DCEAF7] shadow-xl">
-              <Image
-                src="/catalog/Gemini_Generated_Image_2wsba02wsba02wsb.jpg"
-                alt="Seamstress measuring and tailoring garments at King's Alterations Austin"
-                fill
-                sizes="(max-width: 1024px) 100vw, 600px"
-                className="object-cover object-center"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#203A5B]/70 via-transparent to-transparent" />
-              <div className="absolute bottom-6 left-6 right-6 text-white">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-xs font-semibold text-[#E5D2A6] mb-2 border border-white/20">
-                  <Heart className="w-3.5 h-3.5 text-[#E5D2A6]" />
-                  {t.about.quoteBadge}
-                </span>
-                <p className="text-sm font-medium text-white/90">
-                  &ldquo;{t.about.quote}&rdquo;
-                </p>
-              </div>
-            </div>
-          </div>
+          <a
+            href={waLink(t.wa.general)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-wa px-7 text-sm font-semibold text-white transition-colors hover:bg-wa-dark"
+          >
+            <MessageCircle aria-hidden className="h-4 w-4" />
+            {t.about.cta}
+          </a>
         </div>
+
+        <figure className="mx-auto w-full max-w-sm lg:max-w-md lg:justify-self-end">
+          <div className="overflow-hidden rounded-md border border-mist-deep bg-white">
+            <CatalogImage id={ABOUT_PHOTO_ID} alt="Sample photo: navy blazer" width={640} height={795} sizes="(min-width:1024px) 448px, 90vw" className="aspect-[4/5] w-full object-cover object-top" />
+          </div>
+          <figcaption className="mt-2 text-center text-xs text-muted">{t.about.imageCaption}</figcaption>
+        </figure>
       </div>
     </section>
   );

@@ -1,65 +1,65 @@
 import type { Metadata, Viewport } from "next";
 import { ClientProviders } from "./ClientProviders";
+import { SITE } from "@/lib/site";
 import "./globals.css";
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#fcfaf6",
 };
+
+const title = "King's Alterations | Clothing Alterations & Tailoring in Oak Hill, Austin, TX";
+const description =
+  "King's Alterations in Oak Hill, Southwest Austin: hemming, resizing, zipper repair, wedding and formal wear, suits, cosplay, custom bags and leather. Walk-ins welcome. (512) 679-9240.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://kingsalterations.com"),
-  title: "King's Alterations | Master Tailoring & Garment Alterations Austin, TX",
-  description:
-    "Austin's premier tailor shop located in Oak Hill / Southwest Austin. Expert bridal gown alterations, suits & tuxedo fittings, hemming, repairs, and custom creative projects. Walk-ins welcome!",
-  keywords: [
-    "King's Alterations",
-    "Austin alterations",
-    "Oak Hill tailor",
-    "bridal gown alterations Austin",
-    "suit tailoring Austin TX",
-    "zipper repair Austin",
-    "pant hemming",
-    "Pink Alterations LLC"
-  ],
-  authors: [{ name: "King's Alterations" }],
-  icons: {
-    icon: [
-      { url: "/icono-kings-alterations.png", type: "image/png" },
-      { url: "/favicon.png", sizes: "32x32", type: "image/png" }
-    ],
-    apple: [
-      { url: "/icono-kings-alterations.png", sizes: "180x180", type: "image/png" }
-    ],
-    shortcut: ["/icono-kings-alterations.png"]
-  },
+  ...(SITE.url ? { metadataBase: new URL(SITE.url), alternates: { canonical: "/" } } : {}),
+  title,
+  description,
+  applicationName: SITE.name,
   openGraph: {
-    title: "King's Alterations | Master Tailoring in Austin, TX",
-    description:
-      "Expert tailoring, bridal gown fittings, suits, everyday hemming, and custom projects. Walk-ins welcome in Oak Hill, Austin TX.",
-    url: "https://kingsalterations.com",
-    siteName: "King's Alterations",
-    images: [
-      {
-        url: "/logo-king-alterations.png",
-        width: 1000,
-        height: 670,
-        alt: "King's Alterations Austin TX",
-      },
-    ],
-    locale: "en_US",
     type: "website",
+    locale: "en_US",
+    siteName: SITE.name,
+    title,
+    description,
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630, alt: "King's Alterations logo" }],
   },
+  twitter: { card: "summary_large_image", title, description, images: ["/og-image.jpg"] },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+// Structured data: only verified facts (no ratings, reviews, prices or social profiles).
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ClothingAlterationService",
+  name: SITE.name,
+  alternateName: SITE.formerName,
+  description,
+  telephone: SITE.phoneTel,
+  ...(SITE.url ? { url: SITE.url } : {}),
+  areaServed: SITE.area,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: SITE.street,
+    addressLocality: SITE.city,
+    addressRegion: SITE.region,
+    postalCode: SITE.postalCode,
+    addressCountry: SITE.country,
+  },
+  openingHoursSpecification: SITE.hours.map((h) => ({
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: h.days,
+    opens: h.opens,
+    closes: h.closes,
+  })),
+};
+
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className="min-h-screen flex flex-col bg-[#FCFAF6] text-[#263447] antialiased">
+    <html lang="en">
+      <body className="flex min-h-screen flex-col antialiased">
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>

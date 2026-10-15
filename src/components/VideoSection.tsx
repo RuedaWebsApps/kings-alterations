@@ -1,63 +1,62 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import { Play, Sparkles, Scissors } from "lucide-react";
+import { Play } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
+import { INTRO_VIDEO } from "@/config/media";
+import { SectionHeading } from "@/components/SectionHeading";
 
+/**
+ * Nothing video-related is downloaded until the visitor presses play: only a small WebP poster loads.
+ * Phones get the vertical file, tablets and desktops the horizontal one.
+ */
 export function VideoSection() {
-  const [isPlaying, setIsPlaying] = useState(false);
   const { t } = useI18n();
+  const [src, setSrc] = useState<string | null>(null);
+
+  const start = () => {
+    const wide = window.matchMedia(INTRO_VIDEO.desktopMediaQuery).matches;
+    setSrc(wide ? INTRO_VIDEO.desktop.src : INTRO_VIDEO.mobile.src);
+  };
 
   return (
-    <section className="py-16 bg-[#FCFAF6] border-y border-[#DCEAF7]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#DCEAF7] text-[#203A5B] text-xs font-semibold uppercase tracking-wider mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-[#C5A15A]" />
-            {t.video.badge}
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#203A5B]">
-            {t.video.title}
-          </h2>
-          <p className="mt-3 text-sm sm:text-base text-[#667386]">
-            {t.video.subtitle}
-          </p>
-        </div>
+    <section aria-labelledby="video-title" className="border-y border-mist bg-white py-16 md:py-20">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <SectionHeading eyebrow={t.video.eyebrow} title={t.video.title} subtitle={t.video.subtitle} id="video-title" />
 
-        {/* Responsive Video Container:
-            - Desktop/Tablet (md and up): Uses 16:9 aspect ratio and kings-intro-desktop.mp4
-            - Mobile (under md): Uses vertical 9:16 mobile framing and kings-intro-mobile.mp4
-        */}
-        <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#DCEAF7] bg-[#203A5B] mx-auto max-w-xs md:max-w-5xl aspect-[9/16] md:aspect-[16/9]">
-          {/* Mobile Video element */}
-          <div className="block md:hidden w-full h-full relative">
+        <div className="relative mx-auto aspect-[9/16] w-full max-w-[22rem] overflow-hidden rounded-md bg-navy md:aspect-video md:max-w-none">
+          {src ? (
             <video
-              src="/kings-intro-mobile.mp4"
-              poster="/catalog/Gemini_Generated_Image_1eh3o51eh3o51eh3.jpg"
+              key={src}
+              src={src}
               controls
+              autoPlay
               playsInline
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          {/* Desktop/Tablet Video element */}
-          <div className="hidden md:block w-full h-full relative">
-            <video
-              src="/kings-intro-desktop.mp4"
-              poster="/catalog/Gemini_Generated_Image_1eh3o51eh3o51eh3.jpg"
-              controls
-              playsInline
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-
-        <div className="mt-4 text-center">
-          <p className="text-xs text-[#667386] flex items-center justify-center gap-1.5">
-            <Scissors className="w-3.5 h-3.5 text-[#C5A15A]" />
-            {t.video.subtext}
-          </p>
+              preload="metadata"
+              className="h-full w-full bg-navy object-contain"
+            >
+              {t.video.unsupported}
+            </video>
+          ) : (
+            <button type="button" onClick={start} aria-label={t.video.play} className="group absolute inset-0 block h-full w-full cursor-pointer">
+              <picture>
+                <source media={INTRO_VIDEO.desktopMediaQuery} srcSet={INTRO_VIDEO.desktop.poster} />
+                <img
+                  src={INTRO_VIDEO.mobile.poster}
+                  alt=""
+                  width={INTRO_VIDEO.mobile.width}
+                  height={INTRO_VIDEO.mobile.height}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-full object-cover"
+                />
+              </picture>
+              <span className="absolute inset-0 bg-navy/25 transition-colors group-hover:bg-navy/10" />
+              <span className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-ivory text-navy shadow-lg transition-transform group-hover:scale-105">
+                <Play aria-hidden className="ml-1 h-8 w-8 fill-current" />
+              </span>
+            </button>
+          )}
         </div>
       </div>
     </section>

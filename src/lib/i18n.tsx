@@ -1,274 +1,297 @@
 "use client";
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useSyncExternalStore, type ReactNode } from "react";
 
 export type Locale = "en" | "es";
 
-export const translations = {
-  en: {
-    nav: {
-      tagline: "Master Tailoring & Alteration Studio in Austin, TX",
-      address: "7500 State Hwy 71 Suite 100, Austin, TX (Oak Hill)",
-      hours: "Mon-Fri 9AM-5PM | Sat 9AM-3PM",
-      walkIns: "Walk-ins Welcome",
-      catalog: "Portfolio & Catalog",
-      services: "Services",
-      about: "Our Story",
-      faq: "FAQ",
-      location: "Location & Hours",
-      callShop: "Call Shop",
-      whatsapp: "WhatsApp",
-    },
-    hero: {
-      badge: "Master Tailoring Studio • Austin, TX",
-      titleStart: "The Perfect Fit.",
-      titleAccent: "Thoughtful Alterations.",
-      subtitle:
-        "From everyday wardrobe adjustments and precise hemming to bridal alterations, bespoke suit tailoring, and creative custom projects. We craft your clothing to fit your body, lifestyle, and individual expression.",
-      walkIns: "Walk-Ins Welcome",
-      turnaround: "~1-1.5 Week Turnaround",
-      express: "Express Service Available",
-      chatWhatsapp: "Chat on WhatsApp",
-      exploreCatalog: "Explore Catalog",
-      familyBadge: "Family-Owned Craftsmanship",
-      oakHillBadge: "Southwest Austin / Oak Hill",
-      topRated: "Top Rated",
-    },
-    video: {
-      badge: "Studio Film",
-      title: "Behind the Seams at King's Alterations",
-      subtitle: "Precision, dedication, and attention to every stitch in Austin, TX",
-      tag: "Official Studio Tour",
-      subtext: "Watch our master tailoring process in Oak Hill, Austin TX.",
-    },
-    catalog: {
-      badge: "Visual Catalog & Portfolio",
-      title: "Exemplary Craftsmanship",
-      subtitle: "Browse our curated portfolio of garments, custom tailoring, bridal alterations, and specialized creations completed with precision in Austin, Texas.",
-      all: "All Portfolio",
-      searchPlaceholder: "Search garments...",
-      emptyTitle: "No matching items found",
-      emptySubtitle: "Try adjusting your search criteria or switch back to All Portfolio.",
-      resetFilters: "Reset Filters",
-      tailoredIn: "Tailored in Austin, TX",
-      walkInsPill: "Walk-ins Welcome",
-      inquire: "Inquire",
-      loadMore: "Load More Garments",
-      remaining: "remaining",
-      modalDescription: "Handled with extreme precision and dedicated craftsmanship at King's Alterations. Each piece is tailored to ensure optimal fit, clean silhouette, and lasting comfort.",
-      modalLocation: "Location",
-      modalTurnaround: "Turnaround",
-      modalTurnaroundVal: "~1 to 1.5 Weeks",
-      modalFitting: "Fitting",
-      modalFittingVal: "Walk-ins Welcome",
-      consultWhatsapp: "Consult via WhatsApp",
-      callDirectly: "Or call us directly at",
-    },
-    services: {
-      badge: "Tailoring Expertise",
-      title: "Comprehensive Alteration Services",
-      subtitle: "Every garment receives personalized master craftsmanship. Whether you need an everyday adjustment or a delicate bridal fitting, we bring precision and care to every stitch.",
-      inquireWhatsapp: "Inquire on WhatsApp",
-    },
-    about: {
-      badge: "Family-Owned & Dedicated",
-      title: "A Family Business Built on Trust, Passion & Collaboration",
-      p1: "At King's Alterations (formerly Pink Alterations LLC — same dedicated owner, new elevated look!), every single garment is handled with the exact same care and devotion as if it were our own.",
-      p2: "We love collaborating closely with our Austin neighbors to bring their visions to reality. Whether perfecting the drape of your wedding gown, restoring a vintage leather jacket, or adjusting your daily denim for an effortless silhouette, our workshop is dedicated to precision and friendly, transparent service.",
-      fittingsTitle: "Personalized Fittings",
-      fittingsDesc: "No appointments needed. Walk in during open hours to meet our seamstresses.",
-      pickupTitle: "Reliable Pickup",
-      pickupDesc: "Nathalie will notify you via call or text the moment your piece is ready.",
-      btnWhatsapp: "Ask Us Any Question on WhatsApp",
-      quoteBadge: "Crafted with love in Oak Hill",
-      quote: "Every stitch tells a story of care and dedication to our Austin community.",
-    },
-    faq: {
-      badge: "Clear & Transparent",
-      title: "Frequently Asked Questions",
-      subtitle: "Everything you need to know about our Austin workshop, fittings, turnaround times, and pricing.",
-      helpTitle: "Have a specific alteration question?",
-      helpSubtitle: "Send us a quick photo or message on WhatsApp and we will gladly answer right away.",
-      helpBtn: "Send Question on WhatsApp",
-    },
-    location: {
-      badge: "Visit Our Studio",
-      title: "Convenient Oak Hill Location",
-      subtitle: "Located on State Hwy 71 in Southwest Austin. Easy parking and walk-ins always welcome for fittings.",
-      formerly: "(Formerly Pink Alterations LLC — Same trusted owner, new look)",
-      addressTitle: "Address",
-      areaNote: "Oak Hill / Southwest Austin area",
-      hoursTitle: "Business Hours",
-      monFri: "Monday – Friday:",
-      sat: "Saturday:",
-      sun: "Sunday:",
-      closed: "Closed",
-      phoneTitle: "Direct Telephone",
-      callText: "Call or text anytime",
-      chatWhatsapp: "Chat with Us on WhatsApp",
-      googleMapsBtn: "Open Directions in Google Maps",
-    },
-    footer: {
-      desc: "Austin's premier tailoring and garment alteration studio. Combining master craftsmanship, family care, and bespoke attention for bridal, formalwear, suits, and daily wardrobe adjustments.",
-      formerly: "Formerly Pink Alterations LLC. Same trusted ownership, new refined identity.",
-      explore: "Explore",
-      specialties: "Specialties",
-      contactDirectly: "Contact Directly",
-      chatWhatsapp: "Chat on WhatsApp",
-      rights: "All rights reserved. Oak Hill, Austin, Texas.",
-      craftedWith: "Crafted with love for Austin, TX",
-    },
-    whatsapp: {
-      generalMessage: "Hello King's Alterations! I would like to inquire about your tailoring and alteration services.",
-      itemMessage: "Hello King's Alterations! I am interested in an alteration similar to: {name} ({category}).",
-      serviceMessage: "Hello King's Alterations! I would like to inquire about your {name} service.",
-    }
+const en = {
+  nav: {
+    walkIns: "Walk-ins welcome",
+    catalog: "Catalog",
+    services: "Services",
+    about: "About",
+    faq: "FAQ",
+    location: "Visit",
+    call: "Call the Shop",
+    menu: "Menu",
+    closeMenu: "Close menu",
+    switchTo: "Español",
+    switchLabel: "Switch language to Spanish",
+    hours: "Mon–Fri 9 AM–5 PM · Sat 9 AM–3 PM",
   },
-  es: {
-    nav: {
-      tagline: "Estudio de Sastrería y Modificaciones en Austin, TX",
-      address: "7500 State Hwy 71 Suite 100, Austin, TX (Oak Hill)",
-      hours: "Lun-Vie 9AM-5PM | Sáb 9AM-3PM",
-      walkIns: "Sin Cita Previa",
-      catalog: "Catálogo y Portafolio",
-      services: "Servicios",
-      about: "Nosotros",
-      faq: "Preguntas Frecuentes",
-      location: "Ubicación y Horarios",
-      callShop: "Llamar al Taller",
-      whatsapp: "WhatsApp",
-    },
-    hero: {
-      badge: "Estudio de Sastrería • Austin, TX",
-      titleStart: "El Ajuste Perfecto.",
-      titleAccent: "Modificaciones con Estilo.",
-      subtitle:
-        "Desde ajustes diarios y bastas precisas hasta vestidos de novia, trajes a medida y proyectos especiales. Hacemos que tus prendas se adapten a tu cuerpo, tu vida y tu estilo.",
-      walkIns: "Sin Cita Previa",
-      turnaround: "Entrega en ~1-1.5 semanas",
-      express: "Servicio Express Disponible",
-      chatWhatsapp: "Consultar por WhatsApp",
-      exploreCatalog: "Ver Catálogo",
-      familyBadge: "Negocio Familiar Artesanal",
-      oakHillBadge: "Suroeste de Austin / Oak Hill",
-      topRated: "Mejor Valorado",
-    },
-    video: {
-      badge: "Video del Taller",
-      title: "Detrás de las Costuras en King's Alterations",
-      subtitle: "Precisión, dedicación y cuidado en cada puntada en Austin, TX",
-      tag: "Recorrido por el Taller",
-      subtext: "Conoce nuestro proceso artesanal en Oak Hill, Austin TX.",
-    },
-    catalog: {
-      badge: "Catálogo Visual y Portafolio",
-      title: "Artesanía y Acabados Ejemplares",
-      subtitle: "Explora nuestro portafolio de prendas, sastrería a medida, vestidos de novia y proyectos especiales realizados con precisión en Austin, Texas.",
-      all: "Todo el Portafolio",
-      searchPlaceholder: "Buscar prendas...",
-      emptyTitle: "No se encontraron resultados",
-      emptySubtitle: "Prueba ajustando el término de búsqueda o regresa a Todo el Portafolio.",
-      resetFilters: "Restablecer Filtros",
-      tailoredIn: "Ajustado en Austin, TX",
-      walkInsPill: "Sin Cita Previa",
-      inquire: "Consultar",
-      loadMore: "Cargar Más Prendas",
-      remaining: "restantes",
-      modalDescription: "Elaborado con máxima precisión y dedicación en King's Alterations. Cada prenda se ajusta para garantizar una silueta impecable y comodidad duradera.",
-      modalLocation: "Ubicación",
-      modalTurnaround: "Tiempo de entrega",
-      modalTurnaroundVal: "~1 a 1.5 Semanas",
-      modalFitting: "Pruebas",
-      modalFittingVal: "Sin Cita Previa (Walk-ins)",
-      consultWhatsapp: "Consultar por WhatsApp",
-      callDirectly: "O llámanos directamente al",
-    },
-    services: {
-      badge: "Especialidades de Sastrería",
-      title: "Servicios Integrales de Arreglos",
-      subtitle: "Cada prenda recibe atención personalizada de sastres expertos. Desde un ajuste cotidiano hasta un delicado vestido de gala, cuidamos cada detalle.",
-      inquireWhatsapp: "Consultar por WhatsApp",
-    },
-    about: {
-      badge: "Negocio Familiar y Dedicado",
-      title: "Una Familia Construida sobre la Confianza, Pasión y Cuidado",
-      p1: "En King's Alterations (anteriormente Pink Alterations LLC — ¡mismo dueño y equipo, nueva imagen refinada!), cada prenda se trata con el mismo cariño y dedicación que si fuera nuestra.",
-      p2: "Nos encanta trabajar de cerca con nuestros vecinos de Austin para hacer realidad sus ideas. Ya sea el ajuste perfecto de tu vestido de novia, la restauración de una chaqueta de cuero o tus jeans favoritos, nuestro taller te ofrece precisión y un trato cercano y honesto.",
-      fittingsTitle: "Pruebas Personalizadas",
-      fittingsDesc: "No requieres cita. Visítanos en horario laboral para que nuestras costureras te atiendan.",
-      pickupTitle: "Aviso de Recogida",
-      pickupDesc: "Nathalie te avisará por llamada o mensaje de texto en cuanto tu prenda esté lista.",
-      btnWhatsapp: "Envíanos tu Consulta por WhatsApp",
-      quoteBadge: "Hecho con amor en Oak Hill",
-      quote: "Cada puntada cuenta una historia de cuidado y dedicación para nuestra comunidad.",
-    },
-    faq: {
-      badge: "Claro y Transparente",
-      title: "Preguntas Frecuentes",
-      subtitle: "Todo lo que necesitas saber sobre nuestro taller en Austin, tiempos de entrega, pruebas y tarifas.",
-      helpTitle: "¿Tienes una consulta sobre una prenda específica?",
-      helpSubtitle: "Envíanos una foto o mensaje por WhatsApp y te responderemos con gusto de inmediato.",
-      helpBtn: "Enviar Pregunta por WhatsApp",
-    },
-    location: {
-      badge: "Visita Nuestro Taller",
-      title: "Ubicación Conveniente en Oak Hill",
-      subtitle: "Ubicados en la State Hwy 71 en el suroeste de Austin. Estacionamiento fácil y siempre bienvenidos sin cita.",
-      formerly: "(Antes Pink Alterations LLC — Mismo taller de confianza, nueva imagen)",
-      addressTitle: "Dirección",
-      areaNote: "Zona Oak Hill / Suroeste de Austin",
-      hoursTitle: "Horarios de Atención",
-      monFri: "Lunes – Viernes:",
-      sat: "Sábado:",
-      sun: "Domingo:",
-      closed: "Cerrado",
-      phoneTitle: "Teléfono Directo",
-      callText: "Llámanos o envíanos un texto",
-      chatWhatsapp: "Chatea con Nosotros por WhatsApp",
-      googleMapsBtn: "Abrir Ubicación en Google Maps",
-    },
-    footer: {
-      desc: "El estudio de sastrería y arreglos de referencia en Austin. Combinamos maestría artesanal, trato familiar y atención personalizada para novias, trajes y ropa diaria.",
-      formerly: "Anteriormente Pink Alterations LLC. Misma dueña de confianza, nueva identidad refinada.",
-      explore: "Explorar",
-      specialties: "Especialidades",
-      contactDirectly: "Contacto Directo",
-      chatWhatsapp: "Chatear por WhatsApp",
-      rights: "Todos los derechos reservados. Oak Hill, Austin, Texas.",
-      craftedWith: "Hecho con amor para Austin, TX",
-    },
-    whatsapp: {
-      generalMessage: "¡Hola King's Alterations! Me gustaría consultar sobre sus servicios de arreglos y sastrería.",
-      itemMessage: "¡Hola King's Alterations! Me interesa consultar por un arreglo similar a: {name} ({category}).",
-      serviceMessage: "¡Hola King's Alterations! Quisiera consultar sobre el servicio de: {name}.",
-    }
-  }
+  hero: {
+    eyebrow: "Alterations & tailoring · Oak Hill, Austin",
+    title1: "The Perfect Fit.",
+    title2: "Thoughtful Alterations.",
+    subtitle:
+      "From everyday adjustments to special occasion garments and creative custom projects, we help make your clothing fit your needs and your style.",
+    explore: "Explore Our Work",
+    call: "Call the Shop",
+    whatsapp: "Message us on WhatsApp",
+    points: ["No appointment needed", "About 1–1½ weeks on average", "Express service available"],
+    caption: "Sample garment photo",
+  },
+  video: {
+    eyebrow: "Meet the shop",
+    title: "A closer look at King's Alterations",
+    subtitle: "A short introduction to how we think about every garment.",
+    play: "Play introduction video",
+    unsupported: "Your browser cannot play this video.",
+  },
+  catalog: {
+    eyebrow: "Catalog",
+    title: "What we work on",
+    subtitle:
+      "Browse the kinds of garments and projects we handle. These are sample photos for illustration; ask us about your own piece.",
+    notice: "Photos are illustrative samples, not before-and-after work.",
+    all: "All",
+    count: (n: number) => `${n} photos`,
+    empty: "No photos in this category yet.",
+    reset: "Show all",
+    open: "View larger photo",
+    askAbout: "Ask about this",
+    more: "Show more",
+    remaining: (n: number) => `${n} more`,
+    dialog: "Photo viewer",
+    close: "Close",
+    prev: "Previous photo",
+    next: "Next photo",
+    position: (i: number, n: number) => `${i} of ${n}`,
+    pricing: "Contact us for details",
+    waAbout: (title: string) =>
+      `Hello King's Alterations! I'm interested in alterations on a garment like this: ${title}.`,
+  },
+  services: {
+    eyebrow: "Services",
+    title: "Alterations for how you live and dress",
+    subtitle:
+      "Grouped by what you need. Pricing depends on the garment and the work, so contact us for details. Special projects are evaluated individually.",
+    ask: "Ask about this service",
+    waAbout: (title: string) => `Hello King's Alterations! I'd like to ask about: ${title}.`,
+  },
+  about: {
+    eyebrow: "About the shop",
+    title: "A family business built on trust, passion and collaboration",
+    p1: "King's Alterations is the new name of Pink Alterations LLC: same owner, new look. Every piece is handled with the same care as if it were our own.",
+    p2: "We love working closely with our clients to bring their ideas to life, whether it is the perfect fit for a favorite outfit or a custom design that reflects your personality.",
+    walkIns: "Walk-ins welcome",
+    walkInsText: "No appointment needed for fittings or price questions.",
+    ready: "We tell you when it's ready",
+    readyText: "We take your name and number and reach out by text or phone.",
+    cta: "Ask us a question",
+    imageCaption: "Sample garment photo",
+  },
+  faq: {
+    eyebrow: "FAQ",
+    title: "Frequently asked questions",
+    helpTitle: "Still have a question?",
+    helpText: "Send us a message with a photo of your garment.",
+    helpCta: "Message us on WhatsApp",
+  },
+  location: {
+    eyebrow: "Visit us",
+    title: "Find the shop in Oak Hill",
+    subtitle: "On State Hwy 71 in Southwest Austin. Walk-ins are welcome.",
+    address: "Address",
+    hours: "Hours",
+    mon: "Monday–Friday",
+    sat: "Saturday",
+    sun: "Sunday",
+    closed: "Closed",
+    phone: "Phone",
+    whatsapp: "Message us on WhatsApp",
+    text: "Send a text message",
+    call: "Call (512) 679-9240",
+    directions: "Open in Maps",
+    mapTitle: "Map showing King's Alterations in Austin, Texas",
+    formerly: "Formerly Pink Alterations LLC",
+  },
+  footer: {
+    blurb: "Alterations and tailoring in Oak Hill, Southwest Austin.",
+    explore: "Explore",
+    contact: "Contact",
+    rights: "All rights reserved.",
+    top: "Back to top",
+  },
+  wa: {
+    general: "Hello King's Alterations! I'd like to ask about your alteration services.",
+    float: "Message King's Alterations on WhatsApp",
+    text: "Hello King's Alterations! I'd like to ask about an alteration.",
+  },
 };
 
-interface I18nContextType {
+export type Dict = typeof en;
+
+const es: Dict = {
+  nav: {
+    walkIns: "Sin cita",
+    catalog: "Catálogo",
+    services: "Servicios",
+    about: "Nosotros",
+    faq: "Preguntas",
+    location: "Visítanos",
+    call: "Llamar al Taller",
+    menu: "Menú",
+    closeMenu: "Cerrar menú",
+    switchTo: "English",
+    switchLabel: "Cambiar el idioma a inglés",
+    hours: "Lun–Vie 9 AM–5 PM · Sáb 9 AM–3 PM",
+  },
+  hero: {
+    eyebrow: "Arreglos y sastrería · Oak Hill, Austin",
+    title1: "El Ajuste Perfecto.",
+    title2: "Arreglos Hechos con Cuidado.",
+    subtitle:
+      "Desde ajustes cotidianos hasta prendas para ocasiones especiales y proyectos creativos a medida, hacemos que tu ropa se adapte a tus necesidades y a tu estilo.",
+    explore: "Ver Nuestro Trabajo",
+    call: "Llamar al Taller",
+    whatsapp: "Escríbenos por WhatsApp",
+    points: ["No se necesita cita", "En promedio 1 a 1½ semanas", "Servicio express disponible"],
+    caption: "Foto de prenda de muestra",
+  },
+  video: {
+    eyebrow: "Conoce el taller",
+    title: "Un vistazo a King's Alterations",
+    subtitle: "Una breve introducción a cómo cuidamos cada prenda.",
+    play: "Reproducir video de introducción",
+    unsupported: "Tu navegador no puede reproducir este video.",
+  },
+  catalog: {
+    eyebrow: "Catálogo",
+    title: "En qué trabajamos",
+    subtitle:
+      "Explora los tipos de prendas y proyectos que atendemos. Son fotos de muestra para ilustrar; pregúntanos por tu propia prenda.",
+    notice: "Las fotos son muestras ilustrativas, no trabajos de antes y después.",
+    all: "Todo",
+    count: (n: number) => `${n} fotos`,
+    empty: "Aún no hay fotos en esta categoría.",
+    reset: "Ver todo",
+    open: "Ver foto ampliada",
+    askAbout: "Preguntar por esto",
+    more: "Ver más",
+    remaining: (n: number) => `${n} más`,
+    dialog: "Visor de fotos",
+    close: "Cerrar",
+    prev: "Foto anterior",
+    next: "Foto siguiente",
+    position: (i: number, n: number) => `${i} de ${n}`,
+    pricing: "Contáctanos para más detalles",
+    waAbout: (title: string) =>
+      `¡Hola King's Alterations! Me interesa un arreglo en una prenda como esta: ${title}.`,
+  },
+  services: {
+    eyebrow: "Servicios",
+    title: "Arreglos para tu forma de vivir y vestir",
+    subtitle:
+      "Agrupados según lo que necesitas. El precio depende de la prenda y del trabajo, así que contáctanos para más detalles. Los proyectos especiales se evalúan individualmente.",
+    ask: "Preguntar por este servicio",
+    waAbout: (title: string) => `¡Hola King's Alterations! Quisiera preguntar por: ${title}.`,
+  },
+  about: {
+    eyebrow: "Sobre el taller",
+    title: "Un negocio familiar basado en confianza, pasión y colaboración",
+    p1: "King's Alterations es el nuevo nombre de Pink Alterations LLC: mismo dueño, nueva imagen. Cada prenda se trata con el mismo cuidado que si fuera nuestra.",
+    p2: "Nos encanta trabajar de cerca con nuestros clientes para hacer realidad sus ideas, ya sea el ajuste perfecto de tu atuendo favorito o un diseño a medida que refleje tu personalidad.",
+    walkIns: "Sin cita previa",
+    walkInsText: "No se necesita cita para pruebas ni para preguntar precios.",
+    ready: "Te avisamos cuando esté lista",
+    readyText: "Tomamos tu nombre y número y te avisamos por mensaje o llamada.",
+    cta: "Haznos una pregunta",
+    imageCaption: "Foto de prenda de muestra",
+  },
+  faq: {
+    eyebrow: "Preguntas",
+    title: "Preguntas frecuentes",
+    helpTitle: "¿Aún tienes una duda?",
+    helpText: "Envíanos un mensaje con una foto de tu prenda.",
+    helpCta: "Escríbenos por WhatsApp",
+  },
+  location: {
+    eyebrow: "Visítanos",
+    title: "Encuentra el taller en Oak Hill",
+    subtitle: "En la State Hwy 71, al suroeste de Austin. Te atendemos sin cita.",
+    address: "Dirección",
+    hours: "Horario",
+    mon: "Lunes a viernes",
+    sat: "Sábado",
+    sun: "Domingo",
+    closed: "Cerrado",
+    phone: "Teléfono",
+    whatsapp: "Escríbenos por WhatsApp",
+    text: "Enviar un mensaje de texto",
+    call: "Llamar al (512) 679-9240",
+    directions: "Abrir en Mapas",
+    mapTitle: "Mapa con la ubicación de King's Alterations en Austin, Texas",
+    formerly: "Antes Pink Alterations LLC",
+  },
+  footer: {
+    blurb: "Arreglos y sastrería en Oak Hill, suroeste de Austin.",
+    explore: "Explorar",
+    contact: "Contacto",
+    rights: "Todos los derechos reservados.",
+    top: "Volver arriba",
+  },
+  wa: {
+    general: "¡Hola King's Alterations! Quisiera preguntar por sus servicios de arreglos.",
+    float: "Escribir a King's Alterations por WhatsApp",
+    text: "¡Hola King's Alterations! Quisiera preguntar por un arreglo.",
+  },
+};
+
+export const translations: Record<Locale, Dict> = { en, es };
+
+interface I18nValue {
   locale: Locale;
-  setLocale: (locale: Locale) => void;
-  t: typeof translations["en"];
+  setLocale: (l: Locale) => void;
+  toggle: () => void;
+  t: Dict;
 }
 
-const I18nContext = createContext<I18nContextType | undefined>(undefined);
+const I18nContext = createContext<I18nValue | null>(null);
+const STORAGE_KEY = "ka-locale";
+
+const listeners = new Set<() => void>();
+const subscribe = (cb: () => void) => {
+  listeners.add(cb);
+  return () => listeners.delete(cb);
+};
+const getSnapshot = (): Locale => {
+  try {
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    return saved === "es" ? "es" : "en";
+  } catch {
+    return "en";
+  }
+};
+// Server and first client render are both "en"; React swaps to the saved value right after hydration.
+const getServerSnapshot = (): Locale => "en";
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocale] = useState<Locale>("en");
+  const locale = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  const value = {
-    locale,
-    setLocale,
-    t: translations[locale]
-  };
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
+  const setLocale = useCallback((l: Locale) => {
+    try {
+      window.localStorage.setItem(STORAGE_KEY, l);
+    } catch {
+      /* storage unavailable; the choice just won't persist */
+    }
+    listeners.forEach((cb) => cb());
+  }, []);
+
+  const value = useMemo<I18nValue>(
+    () => ({ locale, setLocale, toggle: () => setLocale(locale === "en" ? "es" : "en"), t: translations[locale] }),
+    [locale, setLocale],
+  );
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 
 export function useI18n() {
-  const context = useContext(I18nContext);
-  if (!context) {
-    throw new Error("useI18n must be used within an I18nProvider");
-  }
-  return context;
+  const ctx = useContext(I18nContext);
+  if (!ctx) throw new Error("useI18n must be used within I18nProvider");
+  return ctx;
 }
