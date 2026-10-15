@@ -29,7 +29,7 @@ const en = {
     call: "Call the Shop",
     whatsapp: "Message us on WhatsApp",
     points: ["No appointment needed", "About 1–1½ weeks on average", "Express service available"],
-    caption: "Sample garment photo",
+    caption: "Bridal & Beyond — King's Alterations",
   },
   video: {
     eyebrow: "Meet the shop",
@@ -147,7 +147,7 @@ const es: Dict = {
     call: "Llamar al Taller",
     whatsapp: "Escríbenos por WhatsApp",
     points: ["No se necesita cita", "En promedio 1 a 1½ semanas", "Servicio express disponible"],
-    caption: "Foto de prenda de muestra",
+    caption: "Alta costura nupcial y sastrería — King's Alterations",
   },
   video: {
     eyebrow: "Conoce el taller",

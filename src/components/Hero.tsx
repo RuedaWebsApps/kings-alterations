@@ -3,9 +3,6 @@
 import { ArrowRight, Check, MessageCircle, Phone } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { SITE, telLink, waLink } from "@/lib/site";
-import { CatalogImage } from "@/components/CatalogImage";
-
-const HERO_PHOTO_ID = "ka-006";
 
 export function Hero() {
   const { t } = useI18n();
@@ -62,8 +59,19 @@ export function Hero() {
         </div>
 
         <figure className="mx-auto w-full max-w-sm lg:col-span-5 lg:max-w-md">
-          <div className="overflow-hidden rounded-md border border-mist-deep bg-white shadow-sm">
-            <CatalogImage id={HERO_PHOTO_ID} alt="Sample photo: wedding gown with a long train" sizes="(min-width:1024px) 448px, 90vw" priority className="aspect-[4/5] w-full object-cover object-top" width={640} height={795} />
+          <div className="overflow-hidden rounded-xl border border-mist-deep bg-white shadow-lg transition-transform duration-300 hover:shadow-xl">
+            <img
+              src="/images/hero-kin-640.webp"
+              srcSet="/images/hero-kin-640.webp 640w, /images/hero-kin-1280.webp 1280w"
+              sizes="(min-width: 1024px) 448px, 90vw"
+              width={640}
+              height={795}
+              alt="King's Alterations Bridal & Beyond - Your Dream Dress, Perfected"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+              className="aspect-[4/5] w-full object-cover object-top"
+            />
           </div>
           <figcaption className="mt-2 text-center text-xs text-muted">{t.hero.caption}</figcaption>
         </figure>
