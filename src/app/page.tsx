@@ -1,5 +1,4 @@
 import { Hero } from "@/components/Hero";
-import { VideoSection } from "@/components/VideoSection";
 import { CatalogSection } from "@/components/CatalogSection";
 import { ServicesSection } from "@/components/ServicesSection";
 import { AboutSection } from "@/components/AboutSection";
@@ -10,7 +9,6 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <VideoSection />
       <CatalogSection />
       <ServicesSection />
       <AboutSection />
