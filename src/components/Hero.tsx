@@ -60,6 +60,7 @@ export function Hero() {
 
         <figure className="mx-auto w-full max-w-sm lg:col-span-5 lg:max-w-md">
           <div className="overflow-hidden rounded-xl border border-mist-deep bg-white shadow-lg transition-transform duration-300 hover:shadow-xl">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/images/hero-kin-640.webp"
               srcSet="/images/hero-kin-640.webp 640w, /images/hero-kin-1280.webp 1280w"
