@@ -24,8 +24,8 @@ export const FAQS: FaqItem[] = [
   {
     q: { en: "How will I know when my item is ready?", es: "¿Cómo sabré cuándo está lista mi prenda?" },
     a: {
-      en: "When you drop off your items we take your name and phone number. Nathalie, our customer service expert, will reach out by text or phone call when your items are ready, or sooner if they finish ahead of time.",
-      es: "Al dejar tus prendas tomamos tu nombre y teléfono. Nathalie, nuestra encargada de atención al cliente, te avisará por mensaje de texto o llamada cuando estén listas, o antes si terminan antes de tiempo.",
+      en: "When you drop off your items we take your name and phone number. Our assistants and team will reach out by text or phone call when your items are ready, or sooner if they finish ahead of time.",
+      es: "Al dejar tus prendas tomamos tu nombre y teléfono. Nuestras encargadas/asistentes te avisarán por mensaje de texto o llamada cuando estén listas, o antes si terminan antes de tiempo.",
     },
   },
   {
